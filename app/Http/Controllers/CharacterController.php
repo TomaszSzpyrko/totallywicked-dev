@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class Location extends Controller
+class CharacterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
-        echo "Rick  & Morty";
-        //
+        return view('character');
     }
 
     /**
@@ -35,18 +34,23 @@ class Location extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //$response = Http::get('https://rickandmortyapi.com/api/character/');
+
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show($id)
     {
-        //
+
+        //$characterGet = \App\Models\Character::find($id);
+        $url = 'https://rickandmortyapi.com/api/character/'.$id;
+        $response = json_decode(file_get_contents($url));
+        return view('character', array('character' => $response));
     }
 
     /**

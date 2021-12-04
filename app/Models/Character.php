@@ -2,16 +2,20 @@
 
 namespace App\Models;
 
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\CollectsResources;
+use Illuminate\Support\Facades\Http;
+
 
 class Character extends Model
 {
     //if isset in database
-    use HasFactory;
+    use HasFactory, CollectsResources;
     //else
+    //public string $apiId = $_GET(basename()) !== null ?: "";
     protected string $url = "https://rickandmortyapi.com/api/character/";
-
     protected int $id;
     protected string $name;
     protected string $status;
@@ -21,29 +25,23 @@ class Character extends Model
     protected string $image;
 
 
-    public function characterGet(): bool
+
+    public function characterGet(): array
     {
-        $data = json_encode([
-            'id' => $this->id,
-            'name' => $this->name,
-            'status' => $this->status,
-            'species' => $this->species,
-            'type' => $this->type,
-            'gender' => $this->gender,
-            'image' => $this->image
-        ]);
+       //$data ='';
+        //$data = file_get_contents('https://rickandmortyapi.com/api/character/');
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-        curl_setopt($ch, CURLOPT_PUT, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        //curl_close();
+        $client = new Client();
+        $url = "https://rickandmortyapi.com/api/character/";
+        $response = $client->request('GET', $url);
 
-        return true;
+        if (!empty($response)) {
+            $response = json_decode(json: $response);
+        } else         {
+            $response = 'XXXX';
+        }
+        return $response;
     }
 
-
-
 }
+

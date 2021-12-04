@@ -1,9 +1,9 @@
 <?php
 
+//use CharacterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LocationController;
-
-Route::resource('articles', LocationController\Controller::class);
+//use LocationController;
+//use EpisodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +19,12 @@ Route::resource('articles', LocationController\Controller::class);
 Route::get('/', function () {
     return view('welcome');
 
+});
+Route::get('/home', function () {
+    return view('home');
 
 });
+//Route::resource('episode', EpisodeController::class);
+//Route::resource('location', LocationController::class);
+Route::get('/character', 'CharacterController@index');
+Route::get('character/{id}', 'CharacterController@show');
