@@ -26,5 +26,8 @@ Route::get('/home', function () {
 });
 //Route::resource('episode', EpisodeController::class);
 //Route::resource('location', LocationController::class);
-Route::get('/character', 'CharacterController@index');
-Route::get('character/{id}', 'CharacterController@show');
+//Route::get('/', 'HomeController@index')->name('root');
+Route::get('/characters', 'CharacterController@index')->name('index');
+Route::get('/characters/{id}', 'CharacterController@index')->name('index');
+//Route::get('/character', 'CharacterController@show')->name('show');
+Route::get('/character/{id}', 'CharacterController@show')->name('show');;
