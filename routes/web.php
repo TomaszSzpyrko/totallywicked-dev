@@ -24,6 +24,15 @@ Route::get('/home', function () {
     return view('home');
 
 });
+Route::get('/episode', function () {
+    return view('episode');
+
+});
+
+Route::get('/location', function () {
+    return view('location');
+
+});
 //Route::resource('episode', EpisodeController::class);
 //Route::resource('location', LocationController::class);
 //Route::get('/', 'HomeController@index')->name('root');

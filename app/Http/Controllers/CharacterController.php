@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use PhpParser\Node\Expr\Array_;
 
 class CharacterController extends Controller
 {
@@ -15,10 +13,6 @@ class CharacterController extends Controller
      */
     public function index()
     {
-        $page= (string)(isset($_GET['page']) ? "?page=".($_GET['page']) : '');
-
-        //$response = Http::get('https://rickandmortyapi.com/api/character/');
-        $url = 'https://rickandmortyapi.com/api/character/'.$page;
         $response = ('{"info":
         {"count":826,"pages":42,"next":"https://rickandmortyapi.com/api/character/?page=2","prev":null},
         "results":[
@@ -28,14 +22,17 @@ class CharacterController extends Controller
         "image":"https://rickandmortyapi.com/api/character/avatar/1.jpeg",
         "episode":["https://rickandmortyapi.com/api/episode/1","https://rickandmortyapi.com/api/episode/2"],
         "url":"https://rickandmortyapi.com/api/character/2","created":"2017-11-04T18:50:21.651Z"}]}');
+        //$response = Http::get('https://rickandmortyapi.com/api/character/');
+        $page = (string)(isset($_GET['page']) ? "?page=" . ($_GET['page']) : '');
+        $url = urlencode( 'https://rickandmortyapi.com/api/character/' . $page);
         $response = file_get_contents($url);
         $res = json_decode($response);
         $pages = intval($res->info->pages);
         $nextPage = parse_url($res->info->next, PHP_URL_QUERY);
-        $current = (int) filter_var($res->info->next, FILTER_SANITIZE_NUMBER_INT);
-        $currentPage = (($current == $pages) ? $pages : $current-1);
-        $previousPage = (($current <= 2) ? 1 : $current-2 );
-        $info = Array (
+        $current = (int)filter_var($res->info->next, FILTER_SANITIZE_NUMBER_INT);
+        $currentPage = (($current == $pages) ? $pages : $current - 1);
+        $previousPage = (($current <= 2) ? 1 : $current - 2);
+        $info = array(
             'prev' => $previousPage,
             'current' => $currentPage,
             'next' => $nextPage,
@@ -43,44 +40,41 @@ class CharacterController extends Controller
             'results' => $res->results
         );
         $info = (object)($info);
-//var_dump($url);
-        return view('character', array('index' => $info) );
+
+        return view('character', array('index' => $info));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //todo: factory check and possible insert
         //$response = Http::get('https://rickandmortyapi.com/api/character/');
-
         //$response = json_decode(file_get_contents($response));
-        //$res = 'X=sfvgas,X1=herhhh,X2=erhghgewg';
-        //return view('character', array($res));
-        //return view('character', array('character' => $response));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show($id)
     {
 
-        if(preg_match('/^[0-9]+$/', $id) && $id > 0 && $id < 827) {
+        if (preg_match('/^[0-9]+$/', $id) && $id > 0 && $id < 827) {
             $this->$id = $id;
         } else {
             $id = 1;
         }
-        //todo: factory check
+        //todo: factory check model
         //$id = \App\Models\Character::find($id);
-        $url = 'https://rickandmortyapi.com/api/character/'.$id;
+        //$response = Http::get('https://rickandmortyapi.com/api/character/');
+        $url = urldecode('https://rickandmortyapi.com/api/character/' . $id);
         $response = json_decode(file_get_contents($url));
         return view('character', array('character' => $response));
     }
